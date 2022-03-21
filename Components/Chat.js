@@ -1,10 +1,13 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
-export default function Screen2() {
+export default function Chat({ navigation, route }) {
+  let name = route.params.name;
+  navigation.setOptions({ title: name });
+
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Hello Screen2!</Text>
+      <Text>Chat!</Text>
     </View>
   );
 }
