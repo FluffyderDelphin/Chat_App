@@ -8,12 +8,16 @@ export default function Screen1({ navigation }) {
   return (
     <View style={styles.container}>
       <Text>Home</Text>
-      <TextInput placeholder="Enter Username" onChange={(e) => setUserName} />
+      <TextInput
+        placeholder="Enter Username"
+        onChangeText={(e) => setUserName(e)}
+      />
       <Button
         title="Go to Chat"
         onPress={() => {
           navigation.navigate('Chat', { name: name });
         }}
+        value={name}
       />
     </View>
   );

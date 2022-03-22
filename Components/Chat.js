@@ -7,7 +7,7 @@ export default function Chat({ navigation, route }) {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Chat!</Text>
+      <Text>Chat! </Text>
     </View>
   );
 }
