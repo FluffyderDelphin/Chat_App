@@ -15,7 +15,7 @@ export default function Screen1({ navigation }) {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={(require = 'img/Background-Image.png')}
+        source={require('../assets/img/Background-Image.png')}
         resizeMode="cover"
         style={styles.image}
       >
@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    flex: 1,
-    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
   },
   loginCard: {
     backgroundColor: 'red',
