@@ -9,14 +9,13 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 
-const backgroundImage = (require = 'img/Background-Image.png');
 export default function Screen1({ navigation }) {
   const [name, setUserName] = useState('');
 
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={backgroundImage}
+        source={(require = 'img/Background-Image.png')}
         resizeMode="cover"
         style={styles.image}
       >
