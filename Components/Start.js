@@ -9,10 +9,7 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 
-const backgroundImage = {
-  uri: 'https://reactnative.dev/img/tiny_logo.png',
-};
-
+const backgroundImage = (require = 'img/Background-Image.png');
 export default function Screen1({ navigation }) {
   const [name, setUserName] = useState('');
 
