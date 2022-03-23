@@ -146,9 +146,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#daebe8',
   },
   active: {
-    opacity: 0.5,
+    borderColor: '#667292',
   },
   inActive: {
-    opacity: 1,
+    borderColor: '#8d9db6',
   },
 });
