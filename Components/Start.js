@@ -45,8 +45,13 @@ export default function Screen1({ navigation }) {
             value={name}
             style={[styles.my1, styles.color3]}
           />
+          <Text style={styles.colorText}>Choose a Background Color</Text>
           <View style={[styles.cyrcleContainer, styles.my1]}>
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="Color 1"
+              accessibilityHint="Lets you choose a Background Color"
+              accessibilityRole="button"
               onPress={() => {
                 setBackGroundColor(styles.color1);
                 setActive('color1');
@@ -58,6 +63,10 @@ export default function Screen1({ navigation }) {
               ]}
             ></TouchableOpacity>
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="Color 2"
+              accessibilityHint="Lets you choose a Background Color"
+              accessibilityRole="button"
               onPress={() => {
                 setBackGroundColor(styles.color2);
                 setActive('color2');
@@ -69,6 +78,10 @@ export default function Screen1({ navigation }) {
               ]}
             ></TouchableOpacity>
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="Color 3"
+              accessibilityHint="Lets you choose a Background Color"
+              accessibilityRole="button"
               onPress={() => {
                 setBackGroundColor(styles.color3);
                 setActive('color3');
@@ -80,6 +93,10 @@ export default function Screen1({ navigation }) {
               ]}
             ></TouchableOpacity>
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="Color 4"
+              accessibilityHint="Lets you choose a Background Color"
+              accessibilityRole="button"
               onPress={() => {
                 setBackGroundColor(styles.color4);
                 setActive('color4');
@@ -124,6 +141,10 @@ const styles = StyleSheet.create({
     margin: 5,
     borderColor: '#667292',
     borderWidth: 4,
+  },
+  colorText: {
+    textAlign: 'center',
+    marginTop: 10,
   },
   my1: {
     marginTop: 10,
