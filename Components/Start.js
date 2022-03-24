@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
   },
   active: {
     borderColor: '#667292',
+    borderWidth: 6,
   },
   inActive: {
     borderColor: '#8d9db6',
