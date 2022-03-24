@@ -7,7 +7,7 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, Time } from 'react-native-gifted-chat';
 
 export default function Chat({ navigation, route }) {
   const [messages, setMessages] = useState([]);
@@ -52,22 +52,42 @@ export default function Chat({ navigation, route }) {
         {...props}
         textStyle={{
           right: {
-            color: 'white',
+            color: 'black',
           },
         }}
         wrapperStyle={{
+          right: {
+            backgroundColor: '#cfe0e8',
+            color: 'red',
+          },
           left: {
-            backgroundColor: 'red',
+            backgroundColor: '#b7d7e8',
           },
         }}
       />
     );
   };
 
+  const renderTime = (props) => {
+    return (
+      <Time
+        {...props}
+        timeTextStyle={{
+          right: {
+            color: '#667292',
+          },
+          left: {
+            color: '#667292',
+          },
+        }}
+      />
+    );
+  };
   return (
     <View style={styles.container}>
       <GiftedChat
-        renderBubble={renderBubble()}
+        renderBubble={renderBubble}
+        renderTime={renderTime}
         messages={messages}
         onSend={(messages) => onSend(messages)}
         user={{ _id: 1 }}
