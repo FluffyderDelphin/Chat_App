@@ -7,7 +7,14 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from 'react-native';
-import { GiftedChat, Bubble, Time } from 'react-native-gifted-chat';
+import {
+  GiftedChat,
+  Bubble,
+  Time,
+  SystemMessage,
+  Day,
+} from 'react-native-gifted-chat';
+import { color } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 
 export default function Chat({ navigation, route }) {
   const [messages, setMessages] = useState([]);
@@ -57,11 +64,11 @@ export default function Chat({ navigation, route }) {
         }}
         wrapperStyle={{
           right: {
-            backgroundColor: '#cfe0e8',
+            backgroundColor: '#bccad6',
             color: 'red',
           },
           left: {
-            backgroundColor: '#b7d7e8',
+            backgroundColor: '#f1e3dd',
           },
         }}
       />
@@ -83,9 +90,20 @@ export default function Chat({ navigation, route }) {
       />
     );
   };
+
+  const renderSystemMessage = (props) => {
+    return <SystemMessage {...props} textStyle={{ color: '#667292' }} />;
+  };
+
+  const renderDay = (props) => {
+    return <Day {...props} textStyle={{ color: '#667292' }} />;
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, bgcolor]}>
       <GiftedChat
+        renderDay={renderDay}
+        renderSystemMessage={renderSystemMessage}
         renderBubble={renderBubble}
         renderTime={renderTime}
         messages={messages}
