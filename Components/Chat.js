@@ -33,6 +33,8 @@ class Chat extends React.Component {
     super();
     this.state = {
       messages: [],
+      user: '',
+      userId: 0,
     };
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
