@@ -17,7 +17,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { LogBox } from 'react-native';
 
-LogBox.ignoreAllLogs();
+LogBox.ignoreLogs(['Timer is set', 'AsyncStorage']);
 export default function App() {
   const Stack = createStackNavigator();
 
