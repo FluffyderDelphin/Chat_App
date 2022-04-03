@@ -56,10 +56,7 @@ class Chat extends React.Component {
         messages: [],
       });
 
-      this.refChatUser = firebase
-        .firestore()
-        .collection('messages')
-        .where('_id', '==', this.state.userId);
+      this.refChatUser = firebase.firestore().collection('messages');
       this.unsubscribeMsg = this.refChatUser.onSnapshot(
         this.onCollectionUpdate
       );
@@ -72,10 +69,10 @@ class Chat extends React.Component {
     querySnapshot.forEach((doc) => {
       let data = doc.data();
       messages.push({
-        _id: data._id,
+        _id: doc._id,
         text: data.text,
         createdAt: data.createdAt.toDate(),
-        user: { _id: data._id, name: data.user.name },
+        user: data.user,
       });
     });
     this.setState({ messages });
