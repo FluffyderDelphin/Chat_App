@@ -15,6 +15,9 @@ import Chat from './Components/Chat';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { LogBox } from 'react-native-web';
+
+LogBox.ignoreLogs(['Timer is set']);
 
 export default function App() {
   const Stack = createStackNavigator();
