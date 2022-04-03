@@ -56,7 +56,6 @@ class Chat extends React.Component {
         messages: [],
       });
 
-      this.refChatUser = firebase.firestore().collection('messages');
       this.unsubscribeMsg = this.refChatMsg
         .oderBy('createdAt', 'desc')
         .onSnapshot(this.onCollectionUpdate);
