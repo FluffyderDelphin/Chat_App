@@ -54,7 +54,7 @@ class Chat extends React.Component {
         await firebase.auth().signInAnonymously();
       }
       this.setState({
-        userId: user.uid,
+        user: user.uid,
         messages: [],
       });
 
