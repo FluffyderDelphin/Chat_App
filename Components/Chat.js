@@ -146,7 +146,7 @@ class Chat extends React.Component {
           renderTime={this.renderTime}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
-          user={{ _id: 1 }}
+          user={{ _id: this.state.userId, name: this.props.route.params.name }}
         />
         {Platform.OS === 'android' ? (
           <KeyboardAvoidingView behavior="height" />
