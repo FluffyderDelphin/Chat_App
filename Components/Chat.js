@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -16,44 +16,78 @@ import {
 } from 'react-native-gifted-chat';
 import { color } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 
-export default function Chat({ navigation, route }) {
-  const [messages, setMessages] = useState([]);
+import { initializeApp } from 'firebase/app';
 
-  let bgcolor = route.params.bgcolor;
-  useEffect(() => {
-    let name = route.params.name;
-    navigation.setOptions({
+const firebase = require('firebase');
+require('firebase/firestore');
+require('firebase/auth');
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyAlz1WU7Znn9BRNqxkgi99qZlPsmv12qIU',
+  authDomain: 'chat-a3c9d.firebaseapp.com',
+  projectId: 'chat-a3c9d',
+  storageBucket: 'chat-a3c9d.appspot.com',
+  messagingSenderId: '882560066796',
+  appId: '1:882560066796:web:f1085379e87e5b43a071c9',
+};
+
+class Chat extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      messages: [],
+    };
+    if (!firebase.apps.length) {
+      firebase.initializeApp({
+        firebaseConfig,
+      });
+    }
+    this.refChatMsg = firebase.firestore().collection('messages');
+  }
+
+  componentDidMount() {
+    let name = this.props.route.params.name;
+    this.props.navigation.setOptions({
       title: name,
-      headerStyle: bgcolor,
+      headerStyle: this.props.bgcolor,
     });
 
-    setMessages([
-      {
-        _id: 1,
-        text: 'Hello developer',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-      {
-        _id: 2,
-        text: 'This is a system message',
-        createdAt: new Date(),
-        system: true,
-      },
-    ]);
-  }, []);
+    this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+      if (!user) {
+        await firebase.auth().signInAnonymously();
+      }
+      this.setState({
+        userId: user.userId,
+        messages: [],
+      });
+    });
+  }
 
-  const onSend = useCallback((messages = []) => {
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages)
-    );
-  }, []);
+  onCollectionUpdate = (querySnapshot) => {
+    const messages = [];
 
-  const renderBubble = (props) => {
+    querySnapshot.forEach((doc) => {
+      let data = doc.data();
+      messages.push({
+        _id: data._id,
+        text: data.text,
+        createdAt: data.createdAt.toDate(),
+        user: data.user,
+      });
+    });
+  };
+
+  componentWillUnmount() {
+    this.authUnsubscribe();
+  }
+
+  onSend(messages = []) {
+    this.setState((previousState) => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+    }));
+  }
+
+  renderBubble = (props) => {
     return (
       <Bubble
         {...props}
@@ -75,7 +109,7 @@ export default function Chat({ navigation, route }) {
     );
   };
 
-  const renderTime = (props) => {
+  renderTime = (props) => {
     return (
       <Time
         {...props}
@@ -91,30 +125,33 @@ export default function Chat({ navigation, route }) {
     );
   };
 
-  const renderSystemMessage = (props) => {
+  renderSystemMessage = (props) => {
     return <SystemMessage {...props} textStyle={{ color: '#667292' }} />;
   };
 
-  const renderDay = (props) => {
+  renderDay = (props) => {
     return <Day {...props} textStyle={{ color: '#667292' }} />;
   };
 
-  return (
-    <View style={[styles.container, bgcolor]}>
-      <GiftedChat
-        renderDay={renderDay}
-        renderSystemMessage={renderSystemMessage}
-        renderBubble={renderBubble}
-        renderTime={renderTime}
-        messages={messages}
-        onSend={(messages) => onSend(messages)}
-        user={{ _id: 1 }}
-      />
-      {Platform.OS === 'android' ? (
-        <KeyboardAvoidingView behavior="height" />
-      ) : null}
-    </View>
-  );
+  render() {
+    let bgcolor = this.props.route.params.bgcolor;
+    return (
+      <View style={[styles.container, bgcolor]}>
+        <GiftedChat
+          renderDay={this.renderDay}
+          renderSystemMessage={this.renderSystemMessage()}
+          renderBubble={this.renderBubble()}
+          renderTime={this.renderTime()}
+          messages={this.state.messages}
+          onSend={(messages) => onSend(messages)}
+          user={{ _id: 1 }}
+        />
+        {Platform.OS === 'android' ? (
+          <KeyboardAvoidingView behavior="height" />
+        ) : null}
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -122,3 +159,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+export default Chat;
