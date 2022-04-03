@@ -83,10 +83,15 @@ class Chat extends React.Component {
   }
 
   onSend(messages = []) {
+    this.addmessage(messages[0]);
     this.setState((previousState) => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }));
   }
+  addmessage = (message) => {
+    message.id = message._id;
+    this.refChatMsg.add(message);
+  };
 
   renderBubble = (props) => {
     return (
