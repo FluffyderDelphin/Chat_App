@@ -14,9 +14,6 @@ import {
   SystemMessage,
   Day,
 } from 'react-native-gifted-chat';
-import { color } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
-
-import { initializeApp } from 'firebase/app';
 
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -38,9 +35,7 @@ class Chat extends React.Component {
       messages: [],
     };
     if (!firebase.apps.length) {
-      firebase.initializeApp({
-        firebaseConfig,
-      });
+      firebase.initializeApp(firebaseConfig);
     }
     this.refChatMsg = firebase.firestore().collection('messages');
   }
@@ -60,6 +55,14 @@ class Chat extends React.Component {
         userId: user.userId,
         messages: [],
       });
+
+      this.refChatUser = firebase
+        .firestore()
+        .collection('messages')
+        .where('_id', '==', this.state.userId);
+      this.unsubscribeMsg = this.refChatUser.onSnapshot(
+        this.onCollectionUpdate
+      );
     });
   }
 
@@ -72,9 +75,10 @@ class Chat extends React.Component {
         _id: data._id,
         text: data.text,
         createdAt: data.createdAt.toDate(),
-        user: data.user,
+        user: { _id: data._id, name: data.user.name },
       });
     });
+    this.setState({ messages });
   };
 
   componentWillUnmount() {
@@ -138,12 +142,13 @@ class Chat extends React.Component {
     return (
       <View style={[styles.container, bgcolor]}>
         <GiftedChat
+          renderUsernameOnMessage={true}
           renderDay={this.renderDay}
-          renderSystemMessage={this.renderSystemMessage()}
-          renderBubble={this.renderBubble()}
-          renderTime={this.renderTime()}
+          renderSystemMessage={this.renderSystemMessage}
+          renderBubble={this.renderBubble}
+          renderTime={this.renderTime}
           messages={this.state.messages}
-          onSend={(messages) => onSend(messages)}
+          onSend={(messages) => this.onSend(messages)}
           user={{ _id: 1 }}
         />
         {Platform.OS === 'android' ? (
