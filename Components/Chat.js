@@ -59,7 +59,7 @@ class Chat extends React.Component {
       });
 
       this.unsubscribeMsg = this.refChatMsg
-        .oderBy('createdAt', 'desc')
+        .orderBy('createdAt', 'desc')
         .onSnapshot(this.onCollectionUpdate);
     });
   }
