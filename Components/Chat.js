@@ -57,9 +57,9 @@ class Chat extends React.Component {
       });
 
       this.refChatUser = firebase.firestore().collection('messages');
-      this.unsubscribeMsg = this.refChatUser.onSnapshot(
-        this.onCollectionUpdate
-      );
+      this.unsubscribeMsg = this.refChatMsg
+        .oderBy('createdAt', 'desc')
+        .onSnapshot(this.onCollectionUpdate);
     });
   }
 
@@ -80,6 +80,7 @@ class Chat extends React.Component {
 
   componentWillUnmount() {
     this.authUnsubscribe();
+    this.unsubscribeMsg();
   }
 
   onSend(messages = []) {
