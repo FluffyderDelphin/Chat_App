@@ -14,7 +14,9 @@ import {
   Time,
   SystemMessage,
   Day,
+  InputToolbar,
 } from 'react-native-gifted-chat';
+import NetInfo from '@react-native-community/netinfo';
 
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -36,6 +38,7 @@ class Chat extends React.Component {
       messages: [],
       user: '',
       userId: 0,
+      isConnected: undefined,
     };
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
@@ -77,6 +80,20 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
+    NetInfo.fetch().then((connection) => {
+      if (connection.isConnected) {
+        console.log('online');
+        this.setState({
+          isConnected: true,
+        });
+      } else {
+        console.log('offline');
+        this.setState({
+          isConnected: false,
+        });
+      }
+    });
+
     let name = this.props.route.params.name;
     this.props.navigation.setOptions({
       title: name,
@@ -181,6 +198,13 @@ class Chat extends React.Component {
   renderDay = (props) => {
     return <Day {...props} textStyle={{ color: '#667292' }} />;
   };
+
+  renderInputToolbar(props) {
+    if (this.state.isConnected === false) {
+    } else {
+      return <InputToolbar {...props} />;
+    }
+  }
 
   render() {
     let bgcolor = this.props.route.params.bgcolor;
