@@ -55,6 +55,27 @@ class Chat extends React.Component {
     }
   }
 
+  async saveMessages() {
+    try {
+      await AsyncStorage.setItem(
+        'messages',
+        JSON.stringify(this.state.messages)
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+  async deleteMessages() {
+    try {
+      await AsyncStorage.removeItem('messages');
+      this.setState({
+        messages: [],
+      });
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
   componentDidMount() {
     let name = this.props.route.params.name;
     this.props.navigation.setOptions({
@@ -101,9 +122,14 @@ class Chat extends React.Component {
 
   onSend(messages = []) {
     this.addmessage(messages[0]);
-    this.setState((previousState) => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }));
+    this.setState(
+      (previousState) => ({
+        messages: GiftedChat.append(previousState.messages, messages),
+      }),
+      () => {
+        this.saveMessages();
+      }
+    );
   }
   addmessage = (message) => {
     message.id = message._id;
