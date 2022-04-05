@@ -1,4 +1,5 @@
 import React from 'react';
+import AsyncStorage from '@react-native-community/async-storage';
 import {
   View,
   Text,
@@ -42,6 +43,18 @@ class Chat extends React.Component {
     this.refChatMsg = firebase.firestore().collection('messages');
   }
 
+  async getmessages() {
+    let messages = '';
+    try {
+      messages = (await AsyncStorage.getItem('messages')) || [];
+      this.setState({
+        messages: JSON.parse(messages),
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
   componentDidMount() {
     let name = this.props.route.params.name;
     this.props.navigation.setOptions({
@@ -62,6 +75,8 @@ class Chat extends React.Component {
         .orderBy('createdAt', 'desc')
         .onSnapshot(this.onCollectionUpdate);
     });
+
+    this.getmessages();
   }
 
   onCollectionUpdate = (querySnapshot) => {
