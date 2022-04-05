@@ -83,11 +83,29 @@ class Chat extends React.Component {
     NetInfo.fetch().then((connection) => {
       if (connection.isConnected) {
         console.log('online');
+
+        this.authUnsubscribe = firebase
+          .auth()
+          .onAuthStateChanged(async (user) => {
+            if (!user) {
+              await firebase.auth().signInAnonymously();
+            }
+            this.setState({
+              user: user.uid,
+              messages: [],
+            });
+
+            this.unsubscribeMsg = this.refChatMsg
+              .orderBy('createdAt', 'desc')
+              .onSnapshot(this.onCollectionUpdate);
+          });
+
         this.setState({
           isConnected: true,
         });
       } else {
         console.log('offline');
+        this.getmessages();
         this.setState({
           isConnected: false,
         });
@@ -99,22 +117,6 @@ class Chat extends React.Component {
       title: name,
       headerStyle: this.props.bgcolor,
     });
-
-    this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-      if (!user) {
-        await firebase.auth().signInAnonymously();
-      }
-      this.setState({
-        user: user.uid,
-        messages: [],
-      });
-
-      this.unsubscribeMsg = this.refChatMsg
-        .orderBy('createdAt', 'desc')
-        .onSnapshot(this.onCollectionUpdate);
-    });
-
-    this.getmessages();
   }
 
   onCollectionUpdate = (querySnapshot) => {
@@ -199,18 +201,19 @@ class Chat extends React.Component {
     return <Day {...props} textStyle={{ color: '#667292' }} />;
   };
 
-  renderInputToolbar(props) {
+  renderInputToolbar = (props) => {
     if (this.state.isConnected === false) {
     } else {
       return <InputToolbar {...props} />;
     }
-  }
+  };
 
   render() {
     let bgcolor = this.props.route.params.bgcolor;
     return (
       <View style={[styles.container, bgcolor]}>
         <GiftedChat
+          renderInputToolbar={this.renderInputToolbar}
           renderUsernameOnMessage={true}
           renderDay={this.renderDay}
           renderSystemMessage={this.renderSystemMessage}
