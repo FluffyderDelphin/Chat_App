@@ -40,10 +40,6 @@ class Chat extends React.Component {
       userId: 0,
       isConnected: undefined,
     };
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    this.refChatMsg = firebase.firestore().collection('messages');
   }
 
   async getmessages() {
@@ -82,6 +78,10 @@ class Chat extends React.Component {
   componentDidMount() {
     NetInfo.fetch().then((connection) => {
       if (connection.isConnected) {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        this.refChatMsg = firebase.firestore().collection('messages');
         console.log('online');
 
         this.authUnsubscribe = firebase
@@ -132,6 +132,7 @@ class Chat extends React.Component {
       });
     });
     this.setState({ messages });
+    this.saveMessages();
   };
 
   componentWillUnmount() {
@@ -141,14 +142,9 @@ class Chat extends React.Component {
 
   onSend(messages = []) {
     this.addmessage(messages[0]);
-    this.setState(
-      (previousState) => ({
-        messages: GiftedChat.append(previousState.messages, messages),
-      }),
-      () => {
-        this.saveMessages();
-      }
-    );
+    this.setState((previousState) => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+    }));
   }
   addmessage = (message) => {
     message.id = message._id;
