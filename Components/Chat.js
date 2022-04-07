@@ -17,6 +17,7 @@ import {
   InputToolbar,
 } from 'react-native-gifted-chat';
 import NetInfo from '@react-native-community/netinfo';
+import CustomActions from './CustomActions';
 
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -206,11 +207,16 @@ class Chat extends React.Component {
     }
   };
 
+  renderCustomActions = (props) => {
+    return <CustomActions {...props} />;
+  };
+
   render() {
     let bgcolor = this.props.route.params.bgcolor;
     return (
       <View style={[styles.container, bgcolor]}>
         <GiftedChat
+          renderActions={this.renderCustomActions}
           renderInputToolbar={this.renderInputToolbar}
           renderUsernameOnMessage={true}
           renderDay={this.renderDay}
