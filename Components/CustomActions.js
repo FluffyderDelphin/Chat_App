@@ -18,7 +18,7 @@ export default class CustomActions extends Component {
     };
   }
 
-  pickImage = async () => {
+  async pickImage() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -32,7 +32,26 @@ export default class CustomActions extends Component {
         image: result.uri,
       });
     }
-  };
+  }
+
+  async takePhoto() {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    console.log(permissionResult);
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this app to acces the Camera!");
+      return;
+    }
+    const result = await ImagePicker.launchCameraAsync();
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({
+        image: result.uri,
+      });
+    }
+  }
 
   onActionPress = () => {
     const options = [
