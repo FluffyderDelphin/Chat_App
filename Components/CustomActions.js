@@ -58,8 +58,8 @@ export default class CustomActions extends Component {
         if (result) {
           this.props.onSend({
             location: {
-              longitude: JSON.stringify(result.coords.longitude),
-              latitude: JSON.stringify(result.coords.latitude),
+              longitude: result.coords.longitude,
+              latitude: result.coords.latitude,
             },
           });
         }
