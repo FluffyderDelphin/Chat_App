@@ -16,10 +16,7 @@ export default class CustomActions extends Component {
   async pickImage() {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
+        mediaTypes: 'Images',
       });
 
       console.log(result);
@@ -57,11 +54,12 @@ export default class CustomActions extends Component {
         let result = await Location.getCurrentPositionAsync({}).catch((error) =>
           console.log(error)
         );
+        console.log(result);
         if (result) {
           this.props.onSend({
             location: {
-              longitude: result.coords.longitude,
-              latitude: result.coords.latitude,
+              longitude: JSON.stringify(result.coords.longitude),
+              latitude: JSON.stringify(result.coords.latitude),
             },
           });
         }
@@ -72,30 +70,21 @@ export default class CustomActions extends Component {
   }
 
   async uploadImage(uri) {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (e) {
-        console.log(e);
-        reject(new TypeError('Network request failed'));
-      };
-      xhr.responseType = 'blob';
-      xhr.open('GET', uri, true);
-      xhr.send(null);
-    });
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
 
-    const imageNameBefore = uri.split('/');
-    const imageName = imageNameBefore[imageNameBefore.length - 1];
+      const imageNameBefore = uri.split('/');
+      const imageName = imageNameBefore[imageNameBefore.length - 1];
 
-    const ref = firebase.storage().ref().child(`images/${imageName}`);
+      const ref = firebase.storage().ref().child(`images/${imageName}`);
 
-    const snapshot = await ref.put(blob);
+      const snapshot = await ref.put(blob);
 
-    blob.close();
-
-    return await snapshot.ref.getDownloadURL();
+      return await snapshot.ref.getDownloadURL();
+    } catch (err) {
+      console.log(err.message);
+    }
   }
 
   onActionPress = () => {

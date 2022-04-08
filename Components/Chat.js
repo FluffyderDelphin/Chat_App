@@ -222,6 +222,7 @@ class Chat extends React.Component {
     if (currentMessage.location) {
       return (
         <MapView
+          showsUserLocation={true}
           style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
           region={{
             latitude: currentMessage.location.latitude,
