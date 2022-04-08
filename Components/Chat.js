@@ -44,6 +44,10 @@ class Chat extends React.Component {
       image: null,
       location: null,
     };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
   }
 
   async getmessages() {
@@ -82,9 +86,6 @@ class Chat extends React.Component {
   componentDidMount() {
     NetInfo.fetch().then((connection) => {
       if (connection.isConnected) {
-        if (!firebase.apps.length) {
-          firebase.initializeApp(firebaseConfig);
-        }
         this.refChatMsg = firebase.firestore().collection('messages');
         console.log('online');
 

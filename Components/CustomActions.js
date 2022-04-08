@@ -4,20 +4,31 @@ import PropTypes from 'prop-types';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// const firebase = require('firebase');
+// require('firebase/firestore');
+// require('firebase/auth');
+
+import * as firebase from 'firebase';
+import 'firebase/firestore';
 export default class CustomActions extends Component {
   async pickImage() {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
 
-    console.log(result);
-    if (!result.cancelled) {
-      const imageUrl = await this.uploadImage(result.uri);
-      this.props.onSend({ image: imageUrl });
+      console.log(result);
+      if (!result.cancelled) {
+        const imageUrl = await this.uploadImage(result.uri);
+        this.props.onSend({ image: imageUrl });
+      }
+    } catch (err) {
+      console.log(err.message);
     }
   }
 
@@ -41,24 +52,26 @@ export default class CustomActions extends Component {
 
   async getLocation() {
     let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status === 'granted') {
-      let result = await Location.getCurrentPositionAsync({}).catch((error) =>
-        console.log(error)
-      );
-      if (result) {
-        this.props.onSend({
-          location: {
-            longitude: result.coords.longitude,
-            latitude: result.coords.latitude,
-          },
-        });
+    try {
+      if (status === 'granted') {
+        let result = await Location.getCurrentPositionAsync({}).catch((error) =>
+          console.log(error)
+        );
+        if (result) {
+          this.props.onSend({
+            location: {
+              longitude: result.coords.longitude,
+              latitude: result.coords.latitude,
+            },
+          });
+        }
       }
+    } catch (err) {
+      console.error(err);
     }
-
-    let location = await Location.getCurrentPositionAsync({});
   }
 
-  async uploadImage() {
+  async uploadImage(uri) {
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
