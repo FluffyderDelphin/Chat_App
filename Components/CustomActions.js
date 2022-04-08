@@ -1,23 +1,11 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Text,
-} from 'react-native-gesture-handler';
-import Proptypes from 'prop-types';
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import PropTypes from 'prop-types';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
 
 export default class CustomActions extends Component {
-  constructor() {
-    super();
-    this.state = {
-      image: null,
-    };
-  }
-
   async pickImage() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -28,9 +16,8 @@ export default class CustomActions extends Component {
 
     console.log(result);
     if (!result.cancelled) {
-      this.setState({
-        image: result.uri,
-      });
+      const imageUrl = await this.uploadImage(result.uri);
+      this.props.onSend({ image: imageUrl });
     }
   }
 
@@ -47,10 +34,55 @@ export default class CustomActions extends Component {
     console.log(result);
 
     if (!result.cancelled) {
-      this.setState({
-        image: result.uri,
-      });
+      const imageUrl = await this.uploadImage(result.uri);
+      this.props.onSend({ image: imageUrl });
     }
+  }
+
+  async getLocation() {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status === 'granted') {
+      let result = await Location.getCurrentPositionAsync({}).catch((error) =>
+        console.log(error)
+      );
+      if (result) {
+        this.props.onSend({
+          location: {
+            longitude: result.coords.longitude,
+            latitude: result.coords.latitude,
+          },
+        });
+      }
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+  }
+
+  async uploadImage() {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError('Network request failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+      xhr.send(null);
+    });
+
+    const imageNameBefore = uri.split('/');
+    const imageName = imageNameBefore[imageNameBefore.length - 1];
+
+    const ref = firebase.storage().ref().child(`images/${imageName}`);
+
+    const snapshot = await ref.put(blob);
+
+    blob.close();
+
+    return await snapshot.ref.getDownloadURL();
   }
 
   onActionPress = () => {
@@ -70,13 +102,13 @@ export default class CustomActions extends Component {
         switch (buttonIndex) {
           case 0:
             console.log('user wants to pick an image');
-            return;
+            return this.pickImage();
           case 1:
             console.log('user wants to take a photo');
-            return;
+            return this.takePhoto();
           case 2:
             console.log('user wants to get their location');
-          default:
+            return this.getLocation();
         }
       }
     );

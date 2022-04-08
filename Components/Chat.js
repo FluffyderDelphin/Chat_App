@@ -18,6 +18,7 @@ import {
 } from 'react-native-gifted-chat';
 import NetInfo from '@react-native-community/netinfo';
 import CustomActions from './CustomActions';
+import MapView from 'react-native-maps';
 
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -40,6 +41,8 @@ class Chat extends React.Component {
       user: '',
       userId: 0,
       isConnected: undefined,
+      image: null,
+      location: null,
     };
   }
 
@@ -130,6 +133,8 @@ class Chat extends React.Component {
         text: data.text,
         createdAt: data.createdAt.toDate(),
         user: data.user,
+        image: data.image || null,
+        location: data.location || null,
       });
     });
     this.setState({ messages });
@@ -211,12 +216,31 @@ class Chat extends React.Component {
     return <CustomActions {...props} />;
   };
 
+  renderCustomView(props) {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      );
+    }
+    return null;
+  }
+
   render() {
     let bgcolor = this.props.route.params.bgcolor;
     return (
       <View style={[styles.container, bgcolor]}>
         <GiftedChat
           renderActions={this.renderCustomActions}
+          renderCustomView={this.renderCustomView}
           renderInputToolbar={this.renderInputToolbar}
           renderUsernameOnMessage={true}
           renderDay={this.renderDay}
