@@ -39,7 +39,7 @@ class Chat extends React.Component {
     this.state = {
       messages: [],
       user: '',
-      userId: 0,
+      uid: 0,
       isConnected: undefined,
       image: null,
       location: null,
@@ -96,9 +96,18 @@ class Chat extends React.Component {
               await firebase.auth().signInAnonymously();
             }
             this.setState({
-              user: user.uid,
+              uid: user.uid,
               messages: [],
+              user: {
+                _id: user.uid,
+                name: name,
+              },
             });
+
+            this.refMsgsUser = firebase
+              .firestore()
+              .collection('messages')
+              .where('uid', '==', this.state.uid);
 
             this.unsubscribeMsg = this.refChatMsg
               .orderBy('createdAt', 'desc')
@@ -133,7 +142,7 @@ class Chat extends React.Component {
         _id: doc.id,
         text: data.text,
         createdAt: data.createdAt.toDate(),
-        user: data.user,
+        user: { _id: data.user._id, name: data.user.name },
         image: data.image || null,
         location: data.location || null,
       });
@@ -157,7 +166,14 @@ class Chat extends React.Component {
   }
   addmessage = (message) => {
     message.id = message._id;
-    this.refChatMsg.add(message);
+    this.refChatMsg.add({
+      _id: message._id,
+      text: message.text || '',
+      createdAt: message.createdAt,
+      user: this.state.user,
+      image: message.image || '',
+      location: message.location || null,
+    });
   };
 
   renderBubble = (props) => {
@@ -251,7 +267,7 @@ class Chat extends React.Component {
           renderTime={this.renderTime}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
-          user={{ _id: this.state.userId, name: this.props.route.params.name }}
+          user={{ _id: this.state.uid, name: this.state.name }}
         />
         {Platform.OS === 'android' ? (
           <KeyboardAvoidingView behavior="height" />
