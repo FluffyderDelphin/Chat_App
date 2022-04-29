@@ -22,7 +22,8 @@ wich will be direcly saved into the Device (for Offline reading) and be saved on
 
 **Needed**
 - Node.js Yarn
-- Expo and Expo go App
+- Expo Cli
+- Expo Go App on the Phone or Emulator
 - either a working Android/IOS Device or Emulator to start the App via Expo
 **Steps**
 - run 'yarn' to install depedencies
