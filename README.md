@@ -1,5 +1,7 @@
 # ChatApp
 
+	![alt text](assets\screenshots\app.PNG)
+
 ## What is does this ChatApp do ?
 
 With this Chatapp a User can simply log in with this name and send messages,
