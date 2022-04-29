@@ -3,6 +3,8 @@
 
 ![App Welcome Screen](assets/screenshots/app.jpg)
 
+<img src="assets/screenshots/app.jpg" alt="drawing" width="200"/>
+
 
 ## What is does this ChatApp do ?
 
