@@ -13,18 +13,18 @@ wich will be direcly saved into the Device (for Offline reading) and be saved on
 
 ## Tech used
 
--React Native
--Expo
--Firebase
--Gifted Chat
+- React Native
+- Expo
+- Firebase
+- Gifted Chat
 
 ## How to use
 
 **Needed**
--Node.js Yarn
--Expo and Expo go App
--either a working Android/IOS Device or Emulator to start the App via Expo
+- Node.js Yarn
+- Expo and Expo go App
+- either a working Android/IOS Device or Emulator to start the App via Expo
 **Steps**
--run 'yarn' to install depedencies
--'expo start' to run Expo
--Scan QR Code or "Run on Android device/emulator" to start the App
+- run 'yarn' to install depedencies
+- 'expo start' to run Expo
+- Scan QR Code or "Run on Android device/emulator" to start the App
