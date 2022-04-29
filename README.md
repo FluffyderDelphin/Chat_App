@@ -1,7 +1,7 @@
 # ChatApp
 
 
-![App Welcome Screen](assets\screenshots\app.PNG)
+![App Welcome Screen](assets\screenshots\app.jpg)
 
 
 ## What is does this ChatApp do ?
