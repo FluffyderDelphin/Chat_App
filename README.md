@@ -1,6 +1,8 @@
 # ChatApp
 
-	![alt text](assets\screenshots\app.PNG)
+
+![alt text](assets\screenshots\app.PNG)
+
 
 ## What is does this ChatApp do ?
 
