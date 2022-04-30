@@ -3,7 +3,7 @@
 
 
 
-<img src="assets/screenshots/app.jpg" alt="drawing" width="400"/>
+<img src="assets/screenshots/app.jpg" alt="Screenshot" width="400"/>
 
 
 ## What is does this ChatApp do ?
