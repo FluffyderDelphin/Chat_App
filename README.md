@@ -23,6 +23,7 @@ wich will be direcly saved into the Device (for Offline reading) and be saved on
 - Expo
 - Firebase
 - Gifted Chat
+- PWA (Progressive Web Apps)
 
 ## How to use
 
