@@ -6,7 +6,7 @@
 <img src="assets/screenshots/app.jpg" alt="Screenshot" width="400"/>
 
 
-## What is does this ChatApp do ?
+## What does this ChatApp do ?
 
 With this Chatapp a User can simply log in with this name and send messages,
 wich will be direcly saved into the Device (for Offline reading) and be saved onto a Firebase Database.
